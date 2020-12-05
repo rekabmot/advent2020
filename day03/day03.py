@@ -20,5 +20,5 @@ def test(t):
 
 trajectories = [(1,1),(3,1),(5,1),(7,1),(1,2)]
 
-print(functools.reduce(lambda a, x: a * test(x), [(3, 1)], 1))
+print(test((3, 1)))
 print(functools.reduce(lambda a, x: a * test(x), trajectories, 1))
