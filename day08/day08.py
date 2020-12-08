@@ -3,38 +3,67 @@ filename = "day08/input"
 with open(filename) as file_object:
     lines = [x.strip() for x in file_object.readlines()]
 
+class Computer:
+    def __init__(self):
+        self.visited_instructions = []
+
+        self.instruction = 0
+        self.accumulator = 0
+
+    def nop(self, x):
+        self.instruction = self.instruction + 1
+
+    def acc(self, x):
+        self.accumulator = self.accumulator + x
+        self.instruction = self.instruction + 1
+
+    def jmp(self, x):
+        self.instruction = self.instruction + x
+
+    def run(self, input, alter_instruction = None):
+        alter_candidate = 0
+        while True:
+            if self.instruction in self.visited_instructions:
+                print('LOOPED!')
+                return False
+
+            if self.instruction == len(input):
+                print('Finished!')
+                return True
+
+            self.visited_instructions.append(self.instruction)
+
+            current = input[self.instruction].split(' ')
+
+            if (current[0] == 'nop' or current[0] == 'jmp'):
+                alter_candidate = alter_candidate + 1
+
+                if alter_candidate == alter_instruction:
+                    if current[0] == 'nop':
+                        current[0] = 'jmp'
+                    else:
+                        current[0] = 'nop'
 
 
-visited_instructions = []
+            getattr(self, current[0])(int(current[1]))
 
-instruction = 0
-accumulator = 0
+        print(f'Accumulator = {self.accumulator}')
 
-def nop(x):
-    global instruction
-    instruction = instruction + 1
+# Part 1
+c = Computer()
+c.run(lines)
+print(c.instruction)
+print(c.accumulator)
 
-def acc(x):
-    global instruction
-    global accumulator
-    accumulator = accumulator + x
-    instruction = instruction + 1
+# Part 2
+last_result = False
+i = 0
 
-def jmp(x):
-    global instruction
-    instruction = instruction + x
+while not last_result:
+    i = i + 1
 
-functions = {
-    'nop': nop,
-    'acc': acc,
-    'jmp': jmp
-}
+    c = Computer()
+    last_result = c.run(lines, i)
 
-while instruction not in visited_instructions:
-    visited_instructions.append(instruction)
-
-    current = lines[instruction].split(' ')
-
-    functions[current[0]](int(current[1]))
-
-print(accumulator)
+print(c.instruction)
+print(c.accumulator)
