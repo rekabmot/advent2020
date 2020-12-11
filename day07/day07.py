@@ -40,7 +40,3 @@ def count_contained_bags(color):
 
 print(functools.reduce(lambda acc, x: acc + (1 if recursive_contains(x, "shiny gold") else 0), bag_rules, 0))
 print(count_contained_bags("shiny gold") - 1)
-
-
-
-
